@@ -509,7 +509,22 @@ DATA.works=(DATA.works||[]).map((w,i)=>{const o=Object.assign({id:"w"+i,b:"",u:"
 DATA.links=DATA.links||[];DATA.sites=(DATA.sites||[]).map((s,i)=>Object.assign({id:"s"+i,t:"",d:"",u:"",img:""},s));delete DATA.chars;delete DATA.platforms;
 DATA.prompts=(DATA.prompts||[]).map((p,i)=>Object.assign({id:"p"+i,t:"",x:"",img:""},p));
 let DIRTY=false;
-if(window.__STANDALONE){try{if(localStorage.getItem("dh-edit")==="1"){const dr=localStorage.getItem("dh-draft");if(dr){Object.assign(DATA,JSON.parse(dr));DIRTY=localStorage.getItem("dh-dirty")==="1";}}}catch(e){}}
+if(window.__STANDALONE){try{
+  if(localStorage.getItem("dh-edit")==="1"){
+    const dr=localStorage.getItem("dh-draft");
+    if(dr){
+      const saved=JSON.parse(dr);
+      const savedWorks=Array.isArray(saved.works)?saved.works:[];
+      const baseWorks=Array.isArray(DATA.works)?DATA.works:[];
+      const savedHasValidWorks=savedWorks.length>=baseWorks.length &&
+        savedWorks.every(w=>w && typeof w.t==="string" && w.t.trim());
+      if(savedHasValidWorks){
+        Object.assign(DATA,saved);
+        DIRTY=localStorage.getItem("dh-dirty")==="1";
+      }
+    }
+  }
+}catch(e){}}
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const splitList=s=>String(s||"").split(/[,，]/).map(x=>x.trim().replace(/^#/,"")).filter(Boolean);
