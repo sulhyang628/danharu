@@ -516,7 +516,7 @@ if(window.__STANDALONE){try{
       const saved=JSON.parse(dr);
       const savedWorks=Array.isArray(saved.works)?saved.works:[];
       const baseWorks=Array.isArray(DATA.works)?DATA.works:[];
-      const savedHasValidWorks=savedWorks.length>=baseWorks.length &&
+      const savedHasValidWorks=Array.isArray(saved.works) &&
         savedWorks.every(w=>w && typeof w.t==="string" && w.t.trim());
       if(savedHasValidWorks){
         Object.assign(DATA,saved);
